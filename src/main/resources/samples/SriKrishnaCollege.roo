@@ -1,0 +1,157 @@
+// Create project
+project setup --topLevelPackage com.srikrishna --projectName SriKrishnaCollege
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+// Create entities without relations
+// CourseType
+enum type --class ~.enumType.CourseType --force
+enum constant --name BSc
+enum constant --name BCom
+enum constant --name BatchlorOfArts
+enum constant --name SSC
+enum constant --name BankCoaching
+enum constant --name Groups
+
+// Create entities without relations
+// EducationType
+enum type --class ~.enumType.EducationType --force
+enum constant --name Academic
+enum constant --name Competitive
+
+
+// Create entities without relations
+// AdmissionMode
+enum type --class ~.enumType.AdmissionMode --force
+enum constant --name DayScholar
+enum constant --name Residential
+
+// Create entities without relations
+// PaymentMode
+enum type --class ~.enumType.PaymentMode --force
+enum constant --name ByCash
+enum constant --name ByCard
+enum constant --name DemandDraft
+enum constant --name Cheque
+
+// Create entities without relations
+// RefferedBy
+enum type --class ~.enumType.RefferedBy --force
+enum constant --name Friend
+enum constant --name Media
+enum constant --name Person
+
+// Create entities without relations
+// AcademicBreakUp
+enum type --class ~.enumType.AcademicBreakUp --force
+enum constant --name FirstYrInternal1
+enum constant --name FirstYrInternal2
+enum constant --name FirstYrSemister1
+enum constant --name FirstYrSemister2
+enum constant --name SecondYrInternal1
+enum constant --name SecondYrInternal2
+enum constant --name SecondYrSemister1
+enum constant --name SecondYrSemister2
+enum constant --name ThirdYrInternal1
+enum constant --name ThirdYrInternal2
+enum constant --name ThirdYrSemister1
+enum constant --name ThirdYrSemister2
+
+// Create entities without relations
+// FollowUpType
+enum type --class ~.enupType.FollowUpType --force
+enum constant --name FirstFollowUp
+enum constant --name SecondFollowUp
+enum constant --name ThirdFollowUp
+
+
+// Create entities without relations
+// PreviousAcademics
+enum type --class ~.enumType.PreviousAcademics --force
+enum constant --name TenthClass
+enum constant --name PUCInter
+enum constant --name Diploma
+
+// Create entities without relations
+// NoOfPaymentsType
+enum type --class ~.enumType.NoOfPaymentsType --force
+enum constant --name FullAmount
+enum constant --name FirstTerm
+enum constant --name SecondTerm
+enum constant --name ThirdTerm
+enum constant --name FourthTerm
+
+// Create entities without relations
+// GroupType
+enum type --class ~.enumType.GroupType --force
+enum constant --name MPCS
+enum constant --name MPC
+enum constant --name BZC
+enum constant --name MSCS
+
+// Create entities without relations
+// FollowUp
+entity jpa --class ~.domain.FollowUp --force
+field enum --fieldName followUpType --type ~.enupType.FollowUpType
+field string --fieldName feedback
+field boolean --fieldName nextFollowUp
+
+
+// Create entities without relations
+// EnquiryForm
+entity jpa --class ~.domain.EnquiryForm --force
+field string --fieldName personName
+field string --fieldName groupName
+field enum --fieldName refferedBy --type ~.enumType.RefferedBy
+field string --fieldName contactNumber --notNull --sizeMax 13 --sizeMin 10
+field string --fieldName alternateContact
+field set --fieldName followUps --type ~.domain.FollowUp
+
+
+// Create entities without relations
+// StudentAcademics
+entity jpa --class ~.domain.StudentAcademics --force
+field enum --fieldName academicType --type ~.enumType.PreviousAcademics
+field string --fieldName NameOfSchool
+field string --fieldName HallTicketNumber
+field string --fieldName MarksAvailed
+
+// Create entities without relations
+// PaymentDetails
+entity jpa --class ~.domain.PaymentDetails --force
+field enum --fieldName modeOfPayment --type ~.enumType.PaymentMode
+field enum --fieldName noOfPayments --type ~.enumType.NoOfPaymentsType
+field number --fieldName totalAmountPaid --type Integer --min 1
+field number --fieldName dueAmount --type Integer --min 1
+
+// Create entities without relations
+// Student
+entity jpa --class ~.domain.Student --force
+field string --fieldName studentName
+field number --fieldName admissionNumber --type Integer --min 1
+field enum --fieldName courseType --type ~.enumType.CourseType
+field enum --fieldName groupType --type ~.enumType.GroupType
+field string --fieldName fatherName
+field string --fieldName contactNumber
+field string --fieldName parentContactNumber
+field string --fieldName emailId
+field string --fieldName aadharNo
+field string --fieldName fathersOccupation
+field string --fieldName mothersOccupation
+field enum --fieldName modeOfAdmission --type ~.enumType.AdmissionMode
+field string --fieldName studentDiscount
+field set --fieldName previousAcademics --type ~.domain.StudentAcademics
+field set --fieldName paymentDetails --type ~.domain.PaymentDetails
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+// Generate service layer
+service --all
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+web mvc controller --all --responseType JSON --pathPrefix /api

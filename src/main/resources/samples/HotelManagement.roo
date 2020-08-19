@@ -1,0 +1,46 @@
+// Create project
+project setup --topLevelPackage com.mc.invoice --projectName HotelManagement
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+// Create entities without relations
+// AccomidationType
+enum type --class ~.enumType.AccomidationType --force
+enum constant --name SingleRoom
+enum constant --name DoubleRoom
+enum constant --name DeluxRoom
+enum constant --name SuiteRoom
+
+// Create entities without relations
+// Customer
+entity jpa --class ~.domain.Customer --force
+field string --fieldName custName
+field string --fieldName mobileNumber
+field string --fieldName emailId
+field string --fieldName address
+
+// Create entities without relations
+// CustomerBooking
+entity jpa --class ~.domain.CustomerBooking --force
+field string --fieldName customer
+field enum --fieldName accomidationType --type ~.enumType.AccomidationType
+field number --fieldName price --type Integer --min 1
+field number --fieldName noOfDays --type Integer --min 1
+field date --fieldName toDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName fromDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+// Generate service layer
+service --all
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+web mvc controller --all --responseType JSON --pathPrefix hotelapi
+
+push-in --all --force

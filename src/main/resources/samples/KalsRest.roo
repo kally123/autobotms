@@ -1,0 +1,38 @@
+// Create project
+project setup --topLevelPackage com.kals --projectName KalsRest
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+// Create entities without relations
+// Address
+entity jpa --class ~.domain.Address --force
+field string --fieldName country
+
+// Create entities without relations
+// Customer
+entity jpa --class ~.domain.Customer --force
+field string --fieldName firstName
+field string --fieldName lastName
+field reference --fieldName address --type ~.domain.Address
+
+
+// Create entities without relations
+// Product
+entity jpa --class ~.domain.Product --force
+field string --fieldName nmae1
+field string --fieldName descr
+
+
+// Generate repositories
+repository jpa --all
+// Generate service layer
+service --all
+
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType JSON --pathPrefix /api
+web mvc controller --all --responseType THYMELEAF
+
+//push-in --all --force

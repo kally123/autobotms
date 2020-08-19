@@ -1,0 +1,63 @@
+// Create project
+project setup --topLevelPackage com.venkata.traders --projectName SriVenkataramanaTraders
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+// Create entities without relations
+// TaxSlabs
+enum type --class ~.enumType.TaxSlabs --force
+enum constant --name IntegratedTax
+enum constant --name CentralTax
+enum constant --name StateTax
+enum constant --name CessTax
+
+// Create entities without relations
+// ProductTaxRates
+entity jpa --class ~.domain.ProductTaxRates --force
+field enum --fieldName taxSlab --type ~.enumType.TaxSlabs
+field number --fieldName taxRate --type Integer --min 1
+
+// Create entities without relations
+// Product
+entity jpa --class ~.domain.Product --force
+field string --fieldName productName
+field string --fieldName productDescription
+field date --fieldName applicableFrom --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName hsnSac
+field boolean --fieldName taxability
+field set --fieldName productTaxRates --type ~.domain.ProductTaxRates
+field number --fieldName productQuantity --type Integer --min 1
+
+// Create entities without relations
+// CustomerProducts
+entity jpa --class ~.domain.CustomerProducts --force
+field reference --fieldName product --type ~.domain.Product
+field number --fieldName quantity --type Integer --min 1
+field number --fieldName totalProductTax --type Integer --min 1
+field number --fieldName finalProductTax --type Integer --min 1
+
+// Create entities without relations
+// Customer
+entity jpa --class ~.domain.Customer --force
+field string --fieldName customerName
+field string --fieldName mobileNo
+field string --fieldName address
+field date --fieldName purshaseDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field set --fieldName customerProducts --type ~.domain.CustomerProducts
+
+
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+// Generate service layer
+service --all
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+web mvc controller --all --pathPrefix api
+
+push-in --all --force

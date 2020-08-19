@@ -1,0 +1,95 @@
+// Create project
+project setup --topLevelPackage com.mc.invoice --projectName TanishBilling
+// Setup JPA
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+
+// Create entities without relations
+// AccomidationType
+enum type --class ~.enumtype.AccomidationType --force
+enum constant --name StandardRoom
+enum constant --name DoubleRoom
+enum constant --name DeluxRoom
+enum constant --name SuiteRoom
+enum constant --name ExtraBed
+
+// Create entities without relations
+// Customer
+entity jpa --class ~.domain.Customer --entityFormatExpression "#{firstName} #{lastName}"
+field string --fieldName firstName
+field string --fieldName lastName
+field string --fieldName mobileNumber
+field string --fieldName dateOfBirth
+field string --fieldName emailId
+field string --fieldName documentProof
+field string --fieldName addressLine1
+field string --fieldName addressLine2
+field string --fieldName cityName
+field string --fieldName country
+
+// Create entities without relations
+// Accomidation
+entity jpa --class ~.domain.Accomidation --force
+field enum --fieldName accomidationType --type ~.enumtype.AccomidationType
+field number --fieldName accomidationPrice --type Integer --min 1
+
+// Create entities without relations
+// CustomerBooking
+entity jpa --class ~.domain.CustomerBooking --force
+//field reference --fieldName customer --type ~.domain.Customer
+//field reference --fieldName accomidation --type ~.domain.Accomidation
+field string --fieldName organization
+field date --fieldName checkInDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName checkOutDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field number --fieldName noOfDays --type Integer --min 1
+field number --fieldName noOfRooms --type Integer --min 1
+field string --fieldName roomNumbers
+field string --fieldName specialInstructions
+field number --fieldName customerDiscount --type Integer
+field number --fieldName amountAfterDiscount --type  java.lang.Float
+field number --fieldName sGst --type java.lang.Float
+field number --fieldName cGst --type java.lang.Float
+field number --fieldName totalAfterTaxPerRoom --type java.lang.Float
+field number --fieldName finalAmountAfterTax --type java.lang.Float
+
+// CustomerBooking relations
+focus --class ~.domain.CustomerBooking
+field reference --fieldName customer --type ~.domain.Customer --aggregation false --joinColumnName my_customer
+field set --fieldName accomidations --type ~.domain.Accomidation --joinTable my_customer_bookings --joinColumns my_order --referencedColumns id --inverseJoinColumns my_customer --inverseReferencedColumns id
+
+// CustomerBooking relations
+focus --class ~.domain.CustomerBooking
+field set --fieldName accomidations --type ~.domain.Accomidation --cardinality ONE_TO_MANY --aggregation false
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+
+// Generate service layer
+service --all
+
+// Generate finders
+dto --class ~.domain.CustomerFindByFirstNameAndLastName
+field string --fieldName firstName
+field string --fieldName lastName
+finder add --entity ~.model.Customer --name findByFirstNameAndLastName --formBean ~.model.CustomerFindByFirstNameAndLastName
+
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+
+// Publishing finders in web layer
+web mvc finder --entity ~.domain.Customer
+web mvc finder --entity ~.domain.Customer --responseType THYMELEAF
+
+// detail OneToMany aggregation
+web mvc detail --entity ~.domain.Customer --field accomidations
+web mvc detail --entity ~.domain.Customer --field accomidations --responseType THYMELEAF --views list,findByFirstNameAndLastName
+
+// detail OneToMany composition
+web mvc detail --entity ~.domain.CustomerBooking --field bookings
+web mvc detail --entity ~.domain.CustomerBooking --field bookings --responseType THYMELEAF
+

@@ -1,0 +1,66 @@
+// Create project
+project setup --topLevelPackage com.mc.invoice --projectName invoicegenerator
+jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+// Create entities without relations
+// AccomidationType
+enum type --class ~.enumtype.AccomidationType --force
+enum constant --name StandardRoom
+enum constant --name DoubleRoom
+enum constant --name DeluxRoom
+enum constant --name SuiteRoom
+enum constant --name ExtraBed
+
+// Create entities without relations
+// Customer
+entity jpa --class ~.domain.Customer --force
+field string --fieldName customerName
+field string --fieldName mobileNumber
+field string --fieldName dateOfBirth
+field string --fieldName emailId
+field string --fieldName documentProof
+field string --fieldName addressLine1
+field string --fieldName addressLine2
+field string --fieldName cityName
+field string --fieldName country
+
+// Create entities without relations
+// Accomidation
+entity jpa --class ~.domain.Accomidation --force
+field enum --fieldName accomidationType --type ~.enumtype.AccomidationType
+field number --fieldName accomidationPrice --type Integer --min 1
+
+// Create entities without relations
+// CustomerBooking
+entity jpa --class ~.domain.CustomerBooking --force
+field reference --fieldName customer --type ~.domain.Customer
+field reference --fieldName accomidation --type ~.domain.Accomidation
+field string --fieldName organization
+field string --fieldName checkInDate
+field string --fieldName checkOutDate
+field number --fieldName noOfDays --type Integer --min 1
+field number --fieldName noOfRooms --type Integer --min 1
+field string --fieldName roomNumbers
+field string --fieldName specialInstructions
+field number --fieldName customerDiscount --type Integer
+field number --fieldName amountAfterDiscount --type  java.lang.Float
+field number --fieldName sGst --type java.lang.Float
+field number --fieldName cGst --type java.lang.Float
+field number --fieldName totalAfterTaxPerRoom --type java.lang.Float
+field number --fieldName finalAmountAfterTax --type java.lang.Float
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+// Generate service layer
+service --all
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+web mvc controller --all --responseType JSON --pathPrefix /invoiceapi
+
+push-in --all --force
