@@ -1,0 +1,231 @@
+// Create project
+project setup --topLevelPackage com.bolttech --projectName dis
+jpa setup --provider HIBERNATE --database H2_IN_MEMORY
+
+// Create entities without relations
+// Facility
+entity jpa --class ~.domain.Facility --force
+field string --fieldName facilityId
+field string --fieldName facilityTypeId
+field string --fieldName facilityName
+field string --fieldName productStoreId
+field string --fieldName defaultDaysToShip
+field string --fieldName description
+field date --fieldName lastUpdatedStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName lastUpdatedTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+
+push-in --all --force
+
+
+// Create entities without relations
+// CountryCode
+entity jpa --class ~.domain.CountryCode --force
+field string --fieldName countryCode
+field string --fieldName countryAbbr
+field string --fieldName countryNumber
+field string --fieldName countryName
+field string --fieldName countryCapital
+field string --fieldName teleCode
+
+push-in --all --force
+
+// Create entities without relations
+// StatusType
+entity jpa --class ~.domain.StatusType --force
+field string --fieldName statusTypeId
+field string --fieldName parentTypeId
+field string --fieldName description
+
+push-in --all --force
+
+// Create entities without relations
+// Status
+entity jpa --class ~.domain.Status --force
+field string --fieldName statusId
+field reference --fieldName statusType --type ~.domain.StatusType
+field string --fieldName statusCode
+field string --fieldName sequenceId
+field string --fieldName description
+
+push-in --all --force
+
+// Create entities without relations
+// Currency
+entity jpa --class ~.domain.Currency --force
+field string --fieldName currencyId
+field string --fieldName currencyType
+field string --fieldName abbrevation
+field number --fieldName numericCode --type Integer --min 1
+field string --fieldName description
+
+push-in --all --force
+
+// Create entities without relations
+// Product
+entity jpa --class ~.domain.Product --force
+field string --fieldName productId
+field string --fieldName productType
+field string --fieldName internalName
+field string --fieldName brandName
+field string --fieldName comments
+field string --fieldName productName
+field string --fieldName ram
+field string --fieldName capacity
+field string --fieldName category
+field string --fieldName color
+field string --fieldName description
+field string --fieldName longDescription
+field string --fieldName smallImageUrl
+field string --fieldName mediumImageUrl
+field string --fieldName largeImageUrl
+field string --fieldName detailImageUrl
+field string --fieldName originalImageUrl
+field string --fieldName inventoryMessage
+field string --fieldName inventoryItemType
+field number --fieldName piecesIncluded --type Integer --min 1
+field number --fieldName productWeight --type Integer --min 1
+field number --fieldName productHeight --type Integer --min 1
+field number --fieldName shippingWeight --type Integer --min 1
+field number --fieldName productWidth --type Integer --min 1
+field number --fieldName shippingWidth --type Integer --min 1
+field number --fieldName productDepth --type Integer --min 1
+field number --fieldName shippingDepth --type Integer --min 1
+field number --fieldName productDiameter --type Integer --min 1
+field number --fieldName productRating --type Integer --min 1
+field string --fieldName returnable
+field string --fieldName taxable
+field string --fieldName chargeShipping
+field string --fieldName autoCreateKeywords
+field string --fieldName includeInPromotions
+field string --fieldName virtual
+field string --fieldName variant
+field string --fieldName virtualVariantMethod
+field string --fieldName requirementMethod
+field string --fieldName originGeoId
+field number --fieldName billOfMaterialLevel --type Integer --min 1
+field number --fieldName reservMaxPersons --type Integer --min 1
+field date --fieldName createdDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName createdBy
+field date --fieldName lastModifiedDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName lastModifiedBy
+field string --fieldName defaultShipmentBoxType
+field date --fieldName lastUpdatedStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName lastUpdatedTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName camera
+field string --fieldName model
+field string --fieldName accessories
+field string --fieldName productDetail
+
+push-in --all --force
+
+// Create entities without relations
+// StockExit
+entity jpa --class ~.domain.StockExit --force
+field string --fieldName stockExitId
+field reference --fieldName facility --type ~.domain.Facility
+field string --fieldName inventoryItemId
+field string --fieldName status
+field string --fieldName exitType
+field number --fieldName logisticCost --type Integer --min 1
+field string --fieldName claimRefNo
+field string --fieldName swapReason
+field string --fieldName repairerName
+field date --fieldName sendDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName recieveDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName comments
+field date --fieldName lastUpdatedStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName lastUpdatedTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName dispatchFormNo
+field string --fieldName createdBy
+field string --fieldName updatedBy
+field string --fieldName dispatchCompanyName
+field number --fieldName originalSumInsured --type Integer --min 1
+field string --fieldName returnImei
+field string --fieldName returnBrand
+field string --fieldName returnModel
+
+push-in --all --force
+
+// Create entities without relations
+// InventoryItem
+entity jpa --class ~.domain.InventoryItem --force
+field string --fieldName inventoryItemId
+field string --fieldName inventoryItemType
+field reference --fieldName product --type ~.domain.Product
+field string --fieldName partyId
+field string --fieldName ownerPartyId
+field reference --fieldName status --type ~.domain.Status
+field date --fieldName datetimeReceived --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName datetimeManufactured --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName expireDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field reference --fieldName facility --type ~.domain.Facility
+field string --fieldName locationSeqId
+field string --fieldName comments
+field number --fieldName quantityOnHandTotal --type Integer --min 1
+field number --fieldName availableToPromiseTotal --type Integer --min 1
+field number --fieldName accountingQuantityTotal --type Integer --min 1
+field number --fieldName quantityOnHand --type Integer --min 1
+field number --fieldName availableToPromise --type Integer --min 1
+field number --fieldName unitCost --type Integer --min 1
+field reference --fieldName currency --type ~.domain.Currency
+field string --fieldName fixedAsset
+field date --fieldName lastUpdatedStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName lastUpdatedTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field date --fieldName createdTxStamp --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName claimRefNo
+field number --fieldName tax --type Integer --min 1
+field string --fieldName deviceConditionType
+field string --fieldName stockType
+field number --fieldName purchaseCost --type Integer --min 1
+field number --fieldName total --type Integer --min 1
+field string --fieldName imei
+field string --fieldName supplierDoNumber
+field number --fieldName logisticCost --type Integer --min 1
+field number --fieldName refurbishedCost --type Integer --min 1
+field string --fieldName eligibleForSwap
+field date --fieldName arcToBolttechDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field number --fieldName sparePartCost --type Integer --min 1
+field number --fieldName refurbishLabourCost --type Integer --min 1
+field string --fieldName arcReferenceNo
+field string --fieldName initialDiagnosedStatus
+field string --fieldName financeApproval
+field number --fieldName repairLabourCost --type Integer --min 1
+field string --fieldName finalDiagnosedStatus
+field string --fieldName userLoginId
+field string --fieldName exitType
+field string --fieldName poNo
+field string --fieldName doaPrDate
+field string --fieldName stockReceiveFrom
+field string --fieldName accessoriesId
+field string --fieldName faultyReason
+field date --fieldName poDate --type java.util.Date --dateTimeFormatPattern "dd/MM/yyyy"
+field string --fieldName doaPrNo
+field string --fieldName createdBy
+field string --fieldName oldImei
+
+push-in --all --force
+
+// Generate repositories
+repository jpa --all
+
+push-in --all --force
+
+// Generate service layer
+service --all
+
+// Generate web layer
+web mvc setup
+web mvc language --code en
+web mvc controller --all
+web mvc view setup --type THYMELEAF
+web mvc controller --all --responseType THYMELEAF
+web mvc controller --all --pathPrefix /api
+
+

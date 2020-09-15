@@ -438,7 +438,7 @@ public class HomeController {
         try {
             String projectName = StringUtils.isEmpty(autobot.getProjectDetails().getProjectName()) ? AutobotConstants.DEFAULT_PROJECT
                     : autobot.getProjectDetails().getProjectName();
-            rooFile = new File(rooBatPath + "samples" + File.separator + projectName + ".roo");
+            rooFile = new File("samples" + File.separator + projectName + ".roo");
             FileWriter fileWriter = new FileWriter(rooFile, true);
             fileWriter.append(commandStr);
             fileWriter.close();

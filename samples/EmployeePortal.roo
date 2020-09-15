@@ -1,38 +1,33 @@
 // Create project
-project setup --topLevelPackage com.kals --projectName KalsRest
-jpa setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+project setup --topLevelPackage com.bolttech.customer --projectName EmployeePortal
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
 
 // Create entities without relations
 // Address
 entity jpa --class ~.domain.Address --force
+field string --fieldName street
 field string --fieldName country
+field string --fieldName pincode
 
 // Create entities without relations
-// Customer
-entity jpa --class ~.domain.Customer --force
-field string --fieldName firstName
-field string --fieldName lastName
+// Employee
+entity jpa --class ~.domain.Employee --force
+field string --fieldName employeeName
+field string --fieldName mobileNo
 field reference --fieldName address --type ~.domain.Address
+field string --fieldName emailId
 
 
-// Create entities without relations
-// Product
-entity jpa --class ~.domain.Product --force
-field string --fieldName name
-field string --fieldName descr
-
+//push-in --all --force
 
 // Generate repositories
 repository jpa --all
 // Generate service layer
 service --all
-
 // Generate web layer
 web mvc setup
 web mvc language --code en
 web mvc controller --all
 web mvc view setup --type THYMELEAF
-web mvc controller --all --responseType JSON --pathPrefix /api
 web mvc controller --all --responseType THYMELEAF
-
-//push-in --all --force
+web mvc controller --all --pathPrefix /api
